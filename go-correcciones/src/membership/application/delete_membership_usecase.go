@@ -2,6 +2,7 @@ package application
 
 import (
 	"api/src/membership/domain/ports"
+	"errors"
 )
 
 type DeleteMembershipUseCase struct {
@@ -13,5 +14,14 @@ func NewDeleteMembershipUseCase(repo ports.MembershipRepository) *DeleteMembersh
 }
 
 func (uc *DeleteMembershipUseCase) Execute(id int) error {
+	membership, err := uc.repo.GetMembershipByID(id)
+	if err != nil {
+		return err
+	}
+
+	if membership == nil {
+		return errors.New("el miembro no existe")
+	}
+
 	return uc.repo.DeleteMembership(id)
 }

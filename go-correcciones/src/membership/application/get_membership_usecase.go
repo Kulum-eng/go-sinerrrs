@@ -13,7 +13,7 @@ func NewGetMembershipUseCase(repo ports.MembershipRepository) *GetMembershipUseC
 	return &GetMembershipUseCase{repo: repo}
 }
 
-func (uc *GetMembershipUseCase) ExecuteByID(id int) (domain.Membership, error) {
+func (uc *GetMembershipUseCase) ExecuteByID(id int) (*domain.Membership, error) {
 	return uc.repo.GetMembershipByID(id)
 }
 

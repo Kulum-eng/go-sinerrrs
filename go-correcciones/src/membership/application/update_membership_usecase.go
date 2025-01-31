@@ -3,6 +3,7 @@ package application
 import (
 	"api/src/membership/domain"
 	"api/src/membership/domain/ports"
+	"errors"
 )
 
 type UpdateMembershipUseCase struct {
@@ -13,5 +14,14 @@ func NewUpdateMembershipUseCase(repo ports.MembershipRepository) *UpdateMembersh
 }
 
 func (uc *UpdateMembershipUseCase) Execute(membership domain.Membership) error {
+	membershipToUpdate, err := uc.repo.GetMembershipByID(membership.ID)
+	if err != nil {
+		return err
+	}
+
+	if membershipToUpdate == nil {
+		return errors.New("el miembro no existe")
+	}
+	
 	return uc.repo.UpdateMembership(membership)
 }

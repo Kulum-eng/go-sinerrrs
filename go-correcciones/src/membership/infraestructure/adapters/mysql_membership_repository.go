@@ -3,7 +3,6 @@ package adapters
 import (
 	"api/src/membership/domain"
 	"database/sql"
-	"errors"
 )
 
 type MySQLMembershipRepository struct {
@@ -30,14 +29,20 @@ func (r *MySQLMembershipRepository) CreateMembership(m domain.Membership) (int, 
 	return int(id), err
 }
 
-func (r *MySQLMembershipRepository) GetMembershipByID(id int) (domain.Membership, error) {
+func (r *MySQLMembershipRepository) GetMembershipByID(id int) (*domain.Membership, error) {
 	var m domain.Membership
+	
 	query := "SELECT id, user_id, association_id, status, role FROM memberships WHERE id = ?"
 	err := r.db.QueryRow(query, id).Scan(&m.ID, &m.UserID, &m.AssociationID, &m.Status, &m.Role)
 	if err != nil {
-		return domain.Membership{}, errors.New("membership not found")
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+
+		return nil, err
 	}
-	return m, nil
+
+	return &m, nil
 }
 
 func (r *MySQLMembershipRepository) GetAllMemberships() ([]domain.Membership, error) {

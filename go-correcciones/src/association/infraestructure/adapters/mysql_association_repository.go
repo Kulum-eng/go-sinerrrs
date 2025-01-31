@@ -3,7 +3,6 @@ package adapters
 import (
 	"api/src/association/domain"
 	"database/sql"
-	"errors"
 )
 
 type MySQLAssociationRepository struct {
@@ -34,7 +33,6 @@ func (r *MySQLAssociationRepository) GetByID(id int) (*domain.Association, error
 	var a domain.Association
 	
 	query := "SELECT id, name, address, contact, services FROM associations WHERE id = ?"
-	
 	err := r.db.QueryRow(query, id).Scan(
 		&a.ID,
 		&a.Name,
@@ -42,7 +40,11 @@ func (r *MySQLAssociationRepository) GetByID(id int) (*domain.Association, error
 		&a.Services,
 	)
 	if err != nil {
-		return &domain.Association{}, errors.New("association not found")
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+
+		return nil, err
 	}
 
 	return &a, nil

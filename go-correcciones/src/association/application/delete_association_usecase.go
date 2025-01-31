@@ -2,6 +2,7 @@ package application
 
 import (
 	"api/src/association/domain/ports"
+	"errors"
 )
 
 type DeleteAssociationUseCase struct {
@@ -13,5 +14,14 @@ func NewDeleteAssociationUseCase(repo ports.AssociationRepository) *DeleteAssoci
 }
 
 func (useCase *DeleteAssociationUseCase) Execute(id int) error {
+	association, err := useCase.repo.GetByID(id)
+	if err != nil {
+		return err
+	}
+
+	if association == nil {
+		return errors.New("la asociación no existe")
+	}
+
 	return useCase.repo.Delete(id)
 }
