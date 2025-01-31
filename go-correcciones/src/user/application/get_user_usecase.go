@@ -13,7 +13,7 @@ func NewGetUserUseCase(repo ports.UserRepository) *GetUserUseCase {
 	return &GetUserUseCase{repo: repo}
 }
 
-func (uc *GetUserUseCase) ExecuteByID(id int) (domain.User, error) {
+func (uc *GetUserUseCase) ExecuteByID(id int) (*domain.User, error) {
 	return uc.repo.GetUserByID(id)
 }
 

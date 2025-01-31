@@ -2,6 +2,7 @@ package application
 
 import (
 	"api/src/user/domain/ports"
+	"errors"
 )
 
 type DeleteUserUseCase struct {
@@ -13,9 +14,13 @@ func NewDeleteUserUseCase(repo ports.UserRepository) *DeleteUserUseCase {
 }
 
 func (uc *DeleteUserUseCase) Execute(id int) error {
-	_, err := uc.repo.GetUserByID(id)
+	user, err := uc.repo.GetUserByID(id)
 	if err != nil {
 		return err
+	}
+
+	if user == nil {
+		return errors.New("el usuario no existe")
 	}
 
 	return uc.repo.DeleteUser(id)

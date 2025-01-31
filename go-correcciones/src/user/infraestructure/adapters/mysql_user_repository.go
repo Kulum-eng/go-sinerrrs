@@ -20,11 +20,20 @@ func (repo *MySQLUserRepository) CreateUser(user domain.User) error {
 	return err
 }
 
-func (repo *MySQLUserRepository) GetUserByID(id int) (domain.User, error) {
+func (repo *MySQLUserRepository) GetUserByID(id int) (*domain.User, error) {
 	var user domain.User
 	err := repo.DB.QueryRow("SELECT id, name, email, password, role FROM users WHERE id = ?", id).
 		Scan(&user.ID, &user.Name, &user.Email, &user.Password, &user.Role)
-	return user, err
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+
+		return nil, err
+	}
+	
+	return &user, err
 }
 
 func (repo *MySQLUserRepository) GetAllUsers() ([]domain.User, error) {
