@@ -13,6 +13,6 @@ func NewCreateAssociationUseCase(repo ports.AssociationRepository) *CreateAssoci
 	return &CreateAssociationUseCase{repo: repo}
 }
 
-func (useCase *CreateAssociationUseCase) Execute(association domain.Association) error {
+func (useCase *CreateAssociationUseCase) Execute(association domain.Association) (int, error) {
 	return useCase.repo.Create(association)
 }

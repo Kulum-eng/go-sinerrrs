@@ -13,6 +13,6 @@ func NewCreateMembershipUseCase(repo ports.MembershipRepository) *CreateMembersh
 	return &CreateMembershipUseCase{repo: repo}
 }
 
-func (uc *CreateMembershipUseCase) Execute(membership domain.Membership) error {
+func (uc *CreateMembershipUseCase) Execute(membership domain.Membership) (int, error) {
 	return uc.repo.CreateMembership(membership)
 }

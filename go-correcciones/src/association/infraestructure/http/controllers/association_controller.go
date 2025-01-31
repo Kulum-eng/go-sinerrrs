@@ -33,10 +33,13 @@ func (ctrl *AssociationController) Create(ctx *gin.Context) {
 		return
 	}
 
-	if err := ctrl.createAssociationUseCase.Execute(association); err != nil {
+	idAssociation, err := ctrl.createAssociationUseCase.Execute(association)
+	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, responses.ErrorResponse("Error al crear asociación", err.Error()))
 		return
 	}
+
+	association.ID = idAssociation
 
 	ctx.JSON(http.StatusCreated, responses.SuccessResponse("Asociación creada exitosamente", association))
 }

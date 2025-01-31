@@ -14,10 +14,20 @@ func NewMySQLMembershipRepository(db *sql.DB) *MySQLMembershipRepository {
 	return &MySQLMembershipRepository{db: db}
 }
 
-func (r *MySQLMembershipRepository) CreateMembership(m domain.Membership) error {
+func (r *MySQLMembershipRepository) CreateMembership(m domain.Membership) (int, error) {
 	query := "INSERT INTO memberships (user_id, association_id, status, role) VALUES (?, ?, ?, ?)"
-	_, err := r.db.Exec(query, m.UserID, m.AssociationID, m.Status, m.Role)
-	return err
+	
+	res, err := r.db.Exec(query, m.UserID, m.AssociationID, m.Status, m.Role)
+	if err != nil {
+		return 0, err
+	}
+
+	id, err := res.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+
+	return int(id), err
 }
 
 func (r *MySQLMembershipRepository) GetMembershipByID(id int) (domain.Membership, error) {

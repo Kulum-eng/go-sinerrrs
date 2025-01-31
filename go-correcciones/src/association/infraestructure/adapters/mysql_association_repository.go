@@ -14,10 +14,20 @@ func NewMySQLAssociationRepository(db *sql.DB) *MySQLAssociationRepository {
 	return &MySQLAssociationRepository{db: db}
 }
 
-func (r *MySQLAssociationRepository) Create(association domain.Association) error {
+func (r *MySQLAssociationRepository) Create(association domain.Association) (int, error) {
 	query := "INSERT INTO associations (name, address, contact, services) VALUES (?, ?, ?, ?)"
-	_, err := r.db.Exec(query, association.Name, association.Contact, association.Contact, association.Services)
-	return err
+	
+	res, err := r.db.Exec(query, association.Name, association.Contact, association.Contact, association.Services)
+	if err != nil {
+		return 0, err
+	}
+
+	id, err := res.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+	
+	return int(id), err
 }
 
 func (r *MySQLAssociationRepository) GetByID(id int) (*domain.Association, error) {

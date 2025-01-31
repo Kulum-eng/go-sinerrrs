@@ -34,10 +34,13 @@ func (ctrl *MembershipController) CreateMembership(ctx *gin.Context) {
 		return
 	}
 
-	if err := ctrl.createMembershipUseCase.Execute(membership); err != nil {
+	idMembership, err := ctrl.createMembershipUseCase.Execute(membership)
+	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, responses.ErrorResponse("Error al crear el miembro", err.Error()))
 		return
 	}
+
+	membership.ID = idMembership
 
 	ctx.JSON(http.StatusCreated, responses.SuccessResponse("Miembro creado exitosamente", membership))
 }
