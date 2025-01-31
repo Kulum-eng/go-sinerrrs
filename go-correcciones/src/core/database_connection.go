@@ -5,11 +5,11 @@ import (
 	"fmt"
 
 	_ "github.com/go-sql-driver/mysql"
-
 )
 
 func InitDB() (*sql.DB, error) {
-	dsn := "alexia:alexia2005(localhost:3306)/mate_db"
+	dsn := "alexia:alexia2005@tcp(localhost:3306)/mate_db"
+	
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		return nil, fmt.Errorf("error al conectar con la base de datos: %v", err)

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/gin-gonic/gin"
 
 	a_application "api/src/association/application"
@@ -24,7 +26,8 @@ func main() {
 
 	db, err := core.InitDB()
 	if err != nil {
-		panic("ocurrió un error al conectar a la BD")
+		log.Println(err)
+		return
 	}
 
 	userRepository := u_adapters.NewMySQLUserRepository(db)
