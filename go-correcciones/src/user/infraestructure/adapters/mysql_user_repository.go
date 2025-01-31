@@ -3,6 +3,7 @@ package adapters
 import (
 	"api/src/user/domain"
 	"database/sql"
+	"errors"
 )
 
 type MySQLUserRepository struct {
@@ -51,6 +52,19 @@ func (repo *MySQLUserRepository) UpdateUser(user domain.User) error {
 }
 
 func (repo *MySQLUserRepository) DeleteUser(id int) error {
-	_, err := repo.DB.Exec("DELETE FROM users WHERE id=?", id)
+	res, err := repo.DB.Exec("DELETE FROM users WHERE id=?", id)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return errors.New("no se eliminó ningún registro")
+	}
+
 	return err
 }
