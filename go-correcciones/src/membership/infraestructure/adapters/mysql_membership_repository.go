@@ -2,7 +2,6 @@ package adapters
 
 import (
 	"api/src/membership/domain"
-	"api/src/membership/domain/ports"
 	"database/sql"
 	"errors"
 )
@@ -11,7 +10,7 @@ type MySQLMembershipRepository struct {
 	db *sql.DB
 }
 
-func NewMySQLMembershipRepository(db *sql.DB) ports.MembershipRepository {
+func NewMySQLMembershipRepository(db *sql.DB) *MySQLMembershipRepository {
 	return &MySQLMembershipRepository{db: db}
 }
 
@@ -20,6 +19,7 @@ func (r *MySQLMembershipRepository) CreateMembership(m domain.Membership) error 
 	_, err := r.db.Exec(query, m.UserID, m.AssociationID, m.Status, m.Role)
 	return err
 }
+
 func (r *MySQLMembershipRepository) GetMembershipByID(id int) (domain.Membership, error) {
 	var m domain.Membership
 	query := "SELECT id, user_id, association_id, status, role FROM memberships WHERE id = ?"

@@ -10,9 +10,9 @@ func RegisterMembershipRoutes(router *gin.Engine, controller *controllers.Member
 	membershipRoutes := router.Group("/membership")
 	{
 		membershipRoutes.POST("/", controller.CreateMembership)
-		/* membershipRoutes.GET("/:id", controller.GetMembership)
+		membershipRoutes.GET("/:id", controller.GetMembershipByID)
 		membershipRoutes.GET("/", controller.GetAllMemberships)
 		membershipRoutes.PUT("/:id", controller.UpdateMembership)
-		membershipRoutes.DELETE("/:id", controller.DeleteMembership) */
+		membershipRoutes.DELETE("/:id", controller.DeleteMembership)
 	}
 }
