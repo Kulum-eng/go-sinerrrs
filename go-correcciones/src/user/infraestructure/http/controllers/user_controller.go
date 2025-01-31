@@ -81,6 +81,12 @@ func (ctrl *UserController) Update(ctx *gin.Context) {
 		return
 	}
 
+	_, err = ctrl.getUserUseCase.ExecuteByID(id)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, responses.ErrorResponse("Error al obtener usuario", err.Error()))
+		return
+	}
+
 	user.ID = id
 	if err := ctrl.updateUserUserCase.Execute(user); err != nil {
 		ctx.JSON(http.StatusInternalServerError, responses.ErrorResponse("Error al actualizar usuario", err.Error()))
