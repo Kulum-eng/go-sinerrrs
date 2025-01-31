@@ -14,10 +14,20 @@ func NewMySQLUserRepository(db *sql.DB) *MySQLUserRepository {
 	return &MySQLUserRepository{DB: db}
 }
 
-func (repo *MySQLUserRepository) CreateUser(user domain.User) error {
-	_, err := repo.DB.Exec("INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)",
+func (repo *MySQLUserRepository) CreateUser(user domain.User) (int, error) {
+	res, err := repo.DB.Exec("INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)",
 		user.Name, user.Email, user.Password, user.Role)
-	return err
+
+	if err != nil {
+		return 0, err
+	}
+
+	id, err := res.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+
+	return int(id), err
 }
 
 func (repo *MySQLUserRepository) GetUserByID(id int) (*domain.User, error) {

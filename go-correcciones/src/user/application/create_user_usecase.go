@@ -13,6 +13,6 @@ func NewCreateUserUseCase(repo ports.UserRepository) *CreateUserUseCase {
 	return &CreateUserUseCase{repo: repo}
 }
 
-func (uc *CreateUserUseCase) Execute(user domain.User) error {
+func (uc *CreateUserUseCase) Execute(user domain.User) (int, error) {
 	return uc.repo.CreateUser(user)
 }

@@ -34,10 +34,13 @@ func (ctrl *UserController) Create(ctx *gin.Context) {
 		return
 	}
 
-	if err := ctrl.createUserUseCase.Execute(user); err != nil {
+	idUser, err := ctrl.createUserUseCase.Execute(user)
+	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, responses.ErrorResponse("Error al crear usuario", err.Error()))
 		return
 	}
+
+	user.ID = idUser
 
 	ctx.JSON(http.StatusCreated, responses.SuccessResponse("Usuario creado exitosamente", user))
 }
