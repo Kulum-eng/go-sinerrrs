@@ -8,7 +8,7 @@ import (
 )
 
 func InitDB() (*sql.DB, error) {
-	dsn := "alexia:alexia2005@tcp(localhost:3306)/mate_db"
+	dsn := "root:alexia2005@tcp(localhost:3306)/gestion_asociaciones"
 	
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
