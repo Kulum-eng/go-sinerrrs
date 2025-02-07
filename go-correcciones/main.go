@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 
@@ -21,8 +22,27 @@ import (
 	u_routes "api/src/user/infraestructure/http/routes"
 )
 
+func CORS() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		log.Println("CORS")
+		c.Header("Access-Control-Allow-Origin", "*")
+		c.Header("Access-Control-Allow-Credentials", "true")
+		c.Header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		c.Header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(http.StatusNoContent)
+			return
+		}
+
+		c.Next()
+	}
+}
+
 func main() {
 	myGin := gin.Default()
+
+	myGin.Use(CORS())
 
 	db, err := core.InitDB()
 	if err != nil {
@@ -54,9 +74,8 @@ func main() {
 	updateAssociationUseCase := a_application.NewUpdateAssociationUseCase(associationRepository)
 	deleteAssociationUseCase := a_application.NewDeleteAssociationUseCase(associationRepository)
 
-
 	createAssociationController := a_controllers.NewAssociationController(createAssociationUseCase, getAssociationUseCase, updateAssociationUseCase, deleteAssociationUseCase)
-	a_routes.SetupRoutes(myGin, createAssociationController )
+	a_routes.SetupRoutes(myGin, createAssociationController)
 
 	myGin.Run()
 }
